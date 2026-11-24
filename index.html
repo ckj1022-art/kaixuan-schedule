@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>開瑄成長時刻表</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Huninn&family=Noto+Serif+TC:wght@700;900&family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Huninn&family=Noto+Sans+TC:wght@400;700&display=swap" rel="stylesheet">
 <style>
 /* VOICE: quiet morning forest — calm, warm, trustworthy for daily planning
    IDEA: a ranger's timetable board hung in a misty forest clearing, sunlight slanting through the canopy
@@ -18,7 +18,7 @@
 :root[data-theme=light],:root[data-theme=dark]{color-scheme:dark}
 *{box-sizing:border-box;min-width:0}
 body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 "Noto Sans TC",system-ui,sans-serif;overflow-x:clip;min-height:100vh}
-h1,h2,.r{font-family:"Noto Serif TC",serif}
+h1,h2,.r{font-family:"Noto Sans TC",sans-serif}
 /* ---------- sky scene ---------- */
 .sky{position:fixed;inset:0;z-index:-1;overflow:hidden;background:linear-gradient(180deg,#eef0d8 0%,#d3e2c8 16%,#93b59c 36%,#4d7462 54%,#1f3a30 72%,#0c1915 90%)}
 .sky svg{position:absolute;left:0;top:-4vh;width:100%;height:78vh}
@@ -71,15 +71,15 @@ button,select,input,textarea{font:inherit;color:inherit}
 .tt>[data-d]{border-left:1px solid rgba(255,255,255,.035)}
 .tt .hd{min-height:0;text-align:center;padding:4px 4px 6px;border-bottom:1px solid transparent;
  border-image:linear-gradient(90deg,transparent,rgba(240,210,130,.45),transparent) 1}
-.tt .hd b{display:inline;font:900 18px/1.2 "Noto Serif TC",serif;color:#f1f4e6;letter-spacing:.06em}
+.tt .hd b{display:inline;font:900 18px/1.2 "Noto Sans TC",sans-serif;color:#f1f4e6;letter-spacing:.06em}
 .tt .hd small{display:inline;margin-left:6px;font-size:12px;letter-spacing:.12em;color:#93a99a}
 .tt .hd.tdh b{color:#ffd59a;text-shadow:0 0 18px rgba(255,180,90,.7)}
 .tt .hd.tdh small{color:#e8b878}
 .tt .hd.tdh::after{content:"";display:inline-block;vertical-align:middle;width:5px;height:5px;margin-left:6px;border-radius:50%;background:#ffc77a;box-shadow:0 0 10px 2px rgba(255,190,110,.8)}
 .tt .corner{display:flex;align-items:end;justify-content:center;font-size:12px;letter-spacing:.2em;color:#86a08f}
 .tt .pl{display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;line-height:1.1}
-.tt .pl .pn{font:700 14px/1.1 "Noto Serif TC",serif;letter-spacing:.04em;color:#e9f1e3}
-.tt .pl .pw{font:700 13px "Noto Serif TC",serif;color:#c3d6c2;letter-spacing:.12em}
+.tt .pl .pn{font:700 14px/1.1 "Noto Sans TC",sans-serif;letter-spacing:.04em;color:#e9f1e3}
+.tt .pl .pw{font:700 13px "Noto Sans TC",sans-serif;color:#c3d6c2;letter-spacing:.12em}
 .tt .pl small{margin-top:3px;font-size:11px;letter-spacing:.2em;color:#86a08f}
 .tt .thin{min-height:36px;background:rgba(0,0,0,.16)}
 .tt .td{background:linear-gradient(180deg,rgba(255,190,110,.07),rgba(255,190,110,.02))}
@@ -113,7 +113,7 @@ button,select,input,textarea{font:inherit;color:inherit}
 h2{font-size:24px;margin:0 0 10px;letter-spacing:.08em;text-shadow:0 0 14px rgba(240,210,130,.35)}
 .vis{list-style:none;margin:0;padding:0}
 .vis li{display:grid;grid-template-columns:5.4em minmax(0,1fr);gap:10px;padding:9px 0;border-bottom:1px solid var(--line)}
-.vis .d{font:900 19px "Noto Serif TC",serif;white-space:nowrap}.vis .d small{display:block;font:13px "Noto Sans TC";color:var(--mut)}
+.vis .d{font:900 19px "Noto Sans TC",sans-serif;white-space:nowrap}.vis .d small{display:block;font:13px "Noto Sans TC";color:var(--mut)}
 .vis b{text-shadow:0 0 8px currentColor}
 .vis li.past{opacity:.4}.vis li.next .d{color:var(--gold);text-shadow:0 0 14px rgba(255,180,90,.8)}
 .leg{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:14px;margin:8px 0 12px;color:#dbe7d5}
@@ -230,7 +230,7 @@ select.in option{background:#15261f}
 .sky-bake,.deco,.crumbs{display:none}
 [data-skin=bakery] .crumbs{display:block;position:absolute;left:0;right:0;top:0;height:calc(100% + 220vh)}
 .crumbs svg{width:100%;height:100%}
-[data-depth]{will-change:transform}
+
 [data-skin=bakery] .sky>*:not(.sky-bake):not(.crumbs){display:none}
 [data-skin=bakery] .sky{background:#f3eee3}
 [data-skin=bakery] .sky-bake{display:block;position:absolute;left:0;right:0;top:0;height:calc(100% + 120vh);opacity:.55;
@@ -590,9 +590,9 @@ function syncRoster(d){
 syncRoster(data);
 if(!['forest','duck'].includes(data.skin))data.skin='duck';
 const applySkin=()=>{document.documentElement.dataset.skin=data.skin};applySkin();
-const ui=Object.assign({mode:'week',person:'',room:'',cats:Object.keys(CATS),off:0,mday:null},store.get('sped-ui')||{});
+const ui=Object.assign({mode:'week',person:'',room:'',cat:'',cats:Object.keys(CATS),off:0,mday:null},store.get('sped-ui')||{});
 const todayD=new Date();const todayIso=iso(todayD);
-for(const k of Object.keys(CATS))if(!(ui.known||[]).includes(k)&&!ui.cats.includes(k))ui.cats.push(k);ui.known=Object.keys(CATS);
+if(!CATS[ui.cat])ui.cat='';delete ui.cats;delete ui.known;
 if(ui.mday==null){const w=todayD.getDay();ui.mday=w>=1&&w<=5?w:1}
 let artifact=null,pubTimer=null,dirty=false,editing=null;
 
@@ -636,7 +636,7 @@ function render(){renderTicker();
   const[stu,tea]=people();
   const chip=(v,l)=>`<button class="chip" data-p="${esc(v)}" aria-pressed="${ui.person===v}">${esc(l)}</button>`;
   $('filters').innerHTML=
-    `<div class="fg"><b>類別</b>${Object.entries(CATS).map(([k,l])=>`<button class="chip" data-c="${k}" aria-pressed="${ui.cats.includes(k)}"><i style="background:var(--${k})"></i>${l}</button>`).join('')}</div>`+
+    `<div class="fg"><b>類別</b><button class="chip" data-c="" aria-pressed="${!ui.cat}">全部</button>${Object.entries(CATS).map(([k,l])=>`<button class="chip" data-c="${k}" aria-pressed="${ui.cat===k}"><i style="background:var(--${k})"></i>${l}</button>`).join('')}</div>`+
     (()=>{const g=new Set(data.students.filter(s=>s.group==='gift').map(s=>s.name));const gs=stu.filter(s=>g.has(s)),os=stu.filter(s=>!g.has(s));
      return `<div class="fg"><b>學生</b>${chip('','全部')}</div>`+(gs.length?`<div class="fg"><b>資優組</b>${gs.map(s=>chip(s,s)).join('')}</div>`:'')+(os.length?`<div class="fg"><b>支持組</b>${os.map(s=>chip(s,s)).join('')}</div>`:'')})()+
     `<div class="fg"><b>老師</b>${tea.map(t=>chip(t,t)).join('')}</div>`+
@@ -649,7 +649,7 @@ function render(){renderTicker();
     const tm=data.times[p];
     h+=`<div class="pl ${thin?'thin':''} ${part==='下午'?'pm':''}"><button class="plb" data-time="${p}" aria-label="修改${lab}時間"><span class="${thin?'pw':'pn'}">${lab}</span><small class="tm">${esc(tm[0])}<br>${esc(tm[1])}</small></button></div>`;
     for(let d=1;d<=5;d++){
-      let list=data.entries.filter(e=>e.d===d&&e.p===p&&ui.cats.includes(e.cat));
+      let list=data.entries.filter(e=>e.d===d&&e.p===p&&(!ui.cat||e.cat===ui.cat));
       if(ui.mode==='week')list=list.filter(e=>visibleIn(e,wd));
       const bad=ui.mode==='week'?clashes(list):new Set();
       h+=`<div class="cell ${thin?'thin':''} ${isTodayCol(d-1)?'td':''} ${ui.mday===d?'on':''}" data-d="${d}" data-p="${p}">`+
@@ -659,7 +659,7 @@ function render(){renderTicker();
   }
   $('tt').innerHTML=h;
   // dated visits
-  const occ=[];data.entries.filter(e=>involves(e,ui.person)&&inRoom(e)).forEach(e=>e.dates.forEach(x=>occ.push({x,e})));
+  const occ=[];data.entries.filter(e=>involves(e,ui.person)&&inRoom(e)&&(!ui.cat||e.cat===ui.cat)).forEach(e=>e.dates.forEach(x=>occ.push({x,e})));
   occ.sort((a,b)=>a.x.localeCompare(b.x)||PERS.findIndex(q=>q[0]===a.e.p)-PERS.findIndex(q=>q[0]===b.e.p));
   const nextDay=(occ.find(o=>o.x>=todayIso)||{}).x;
   const byDay={};occ.forEach(o=>(byDay[o.x]??=[]).push(o.e));
@@ -731,7 +731,7 @@ document.addEventListener('click',ev=>{
   const t=ev.target.closest('button');if(!t)return;
   if(t.dataset.id){openDlg(data.entries.find(x=>x.id===t.dataset.id));return}
   if(t.dataset.add){const[d,p]=t.dataset.add.split('|');openDlg(null,+d,p);return}
-  if(t.dataset.c){const k=t.dataset.c;ui.cats=ui.cats.includes(k)?ui.cats.filter(x=>x!==k):[...ui.cats,k];render();return}
+  if('c' in t.dataset){const k=t.dataset.c;ui.cat=ui.cat===k?'':k;render();return}
   if('room' in t.dataset){ui.room=t.dataset.room===ui.room?'':t.dataset.room;render();return}
   if('p' in t.dataset){ui.person=ui.person===t.dataset.p?'':t.dataset.p;render();return}
   if(t.dataset.md){ui.mday=+t.dataset.md;render();return}
@@ -799,7 +799,7 @@ render();setStatus('');
   const KINDS={kohaku:['#f5f2ea','#ece9e0'],showa:['#f5f2ea','#e4e0d6'],bekko:['#f4f2ec','#e9e7e0'],ogon:['#f4c22e','#f8d568'],higoi:['#e2501c','#ee7d47']};
   let W=0,H=0,S=1,T=0,last=0;const fish=[],rip=[];
   const rnd=seed=>{let s=seed*9301+49297;return()=>(s=(s*9301+49297)%233280)/233280};
-  const size=()=>{const ow=W,oh=H,dpr=Math.min(2,devicePixelRatio||1);W=innerWidth;H=innerHeight;cv.width=Math.round(W*dpr);cv.height=Math.round(H*dpr);g.setTransform(dpr,0,0,dpr,0,0);S=Math.max(.6,Math.min(1.15,Math.min(W,H)/620));if(ow&&oh)for(const f of fish)for(const q of f.pts){q[0]*=W/ow;q[1]*=H/oh}};
+  const size=()=>{const ow=W,oh=H,dpr=1;W=innerWidth;H=innerHeight;cv.width=Math.round(W*dpr);cv.height=Math.round(H*dpr);g.setTransform(dpr,0,0,dpr,0,0);S=Math.max(.6,Math.min(1.15,Math.min(W,H)/620));if(ow&&oh)for(const f of fish)for(const q of f.pts){q[0]*=W/ow;q[1]*=H/oh}};
   function addFish(k){const seed=Math.floor(Math.random()*1e5),r=rnd(seed),L=R(.85,1.15)*66,a=R(0,TAU),pts=[],x=R(.15,.85)*W,y=R(.2,.85)*H;
     for(let i=0;i<N;i++)pts.push([x-Math.cos(a)*i*L/(N-1),y-Math.sin(a)*i*L/(N-1)]);
     const pat=[],j=()=>r()-.5,RED='#d63c1c',SUMI='#17161b',flip=r()<.5?1:-1,v=Math.floor(r()*3);
@@ -847,13 +847,13 @@ render();setStatus('');
   size();addEventListener('resize',size);
   ['kohaku','kohaku','showa','ogon','bekko'].forEach(addFish);
   const still=matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const loop=t=>{const dt=Math.min(.05,(t-(last||t))/1000);last=t;if(document.documentElement.dataset.skin==='duck'&&!document.hidden)frame(dt);requestAnimationFrame(loop)};
+  const loop=t=>{requestAnimationFrame(loop);if(last&&t-last<32)return;const dt=Math.min(.07,(t-(last||t))/1000);last=t;if(document.documentElement.dataset.skin==='duck'&&!document.hidden)frame(dt)};
   if(still){for(let i=0;i<40;i++){for(const f of fish)stepFish(f,.05)}frame(0)}else requestAnimationFrame(loop);
 }
 
 if(!matchMedia('(prefers-reduced-motion: reduce)').matches){
-  const dEls=[...document.querySelectorAll('[data-depth]')];let pend=false;
-  const par=()=>{pend=false;const y=scrollY;for(const el of dEls)el.style.transform=`translate3d(0,${(-y*el.dataset.depth).toFixed(1)}px,0)`};
+  const all=[...document.querySelectorAll('[data-depth]')];let dEls=[],skin='',pend=false;
+  const par=()=>{pend=false;const y=scrollY;const sk=document.documentElement.dataset.skin;if(sk!==skin){skin=sk;dEls=all.filter(el=>el.getClientRects().length)}for(const el of dEls)el.style.transform=`translate3d(0,${(-y*el.dataset.depth).toFixed(1)}px,0)`};
   addEventListener('scroll',()=>{if(!pend){pend=true;requestAnimationFrame(par)}},{passive:true});par();
 }
 for(const c of document.querySelectorAll('.card'))c.addEventListener('pointermove',ev=>{const r=c.getBoundingClientRect();c.style.setProperty('--mx',(ev.clientX-r.left)+'px');c.style.setProperty('--my',(ev.clientY-r.top)+'px')});
@@ -863,7 +863,7 @@ if(!matchMedia('(prefers-reduced-motion: reduce)').matches){
   const ps=Array.from({length:34},()=>({x:Math.random(),y:Math.random(),r:1+Math.random()*2.6,v:.00012+Math.random()*.00025,s:Math.random()*6,petal:Math.random()<.45}));
   const star=(r)=>{cx.beginPath();for(let i=0;i<10;i++){const a=i*Math.PI/5-Math.PI/2,q=i%2?r*.45:r;cx.lineTo(Math.cos(a)*q,Math.sin(a)*q)}cx.closePath()};
   const heart=(r)=>{cx.beginPath();cx.moveTo(0,r*.35);cx.bezierCurveTo(-r*1.2,-r*.4,-r*.4,-r*1.2,0,-r*.45);cx.bezierCurveTo(r*.4,-r*1.2,r*1.2,-r*.4,0,r*.35);cx.closePath()};
-  const tick=t=>{cx.clearRect(0,0,W,H);const sk=document.documentElement.dataset.skin,cute=sk==='cute';if(sk==='bakery'||sk==='duck'){requestAnimationFrame(tick);return}for(const p of ps){p.y+=p.v*(p.petal?1.4:-.6);p.x+=Math.sin(t/2400+p.s)*.00025+(p.petal?.00012:0);
+  let idle=false;const tick=t=>{const sk=document.documentElement.dataset.skin,cute=sk==='cute';if(sk==='bakery'||sk==='duck'){if(!idle){cx.clearRect(0,0,W,H);idle=true}requestAnimationFrame(tick);return}idle=false;cx.clearRect(0,0,W,H);for(const p of ps){p.y+=p.v*(p.petal?1.4:-.6);p.x+=Math.sin(t/2400+p.s)*.00025+(p.petal?.00012:0);
     if(p.y>1.05)p.y=-.05;if(p.y<-.05)p.y=1.05;if(p.x>1.05)p.x=-.05;const X=p.x*W,Y=p.y*H,a=.45+.35*Math.sin(t/900+p.s);
     if(cute){cx.save();cx.translate(X,Y);cx.rotate(Math.sin(t/1400+p.s)*.4);cx.globalAlpha=.35+a*.5;cx.fillStyle=p.petal?'#ffb3c8':'#ffe07a';cx.strokeStyle='rgba(38,51,107,.5)';cx.lineWidth=1.2;p.petal?heart(p.r*3):star(p.r*3.2);cx.fill();cx.stroke();cx.restore();continue}
     if(p.petal){cx.save();cx.translate(X,Y);cx.rotate(t/1600+p.s);cx.fillStyle=p.s>3?`rgba(214,186,92,${a*.8})`:`rgba(150,190,110,${a*.8})`;cx.beginPath();cx.ellipse(0,0,p.r*2.2,p.r,0,0,7);cx.fill();cx.restore()}
@@ -889,7 +889,7 @@ const KP='kx-sched-pw',KT='kx-sched-token';
 let pw=null,salt=null,key=null,token=null,lastCt='',sha=null;
 async function derive(p,s){const base=await crypto.subtle.importKey('raw',enc.encode(p),'PBKDF2',false,['deriveKey']);return crypto.subtle.deriveKey({name:'PBKDF2',salt:s,iterations:ITER,hash:'SHA-256'},base,{name:'AES-GCM',length:256},false,['encrypt','decrypt'])}
 async function seal(obj){const iv=crypto.getRandomValues(new Uint8Array(12));const ct=await crypto.subtle.encrypt({name:'AES-GCM',iv},key,enc.encode(JSON.stringify(obj)));return {v:1,kdf:'PBKDF2-SHA256',iter:ITER,salt:b64(salt),iv:b64(iv),ct:b64(ct),updated:new Date().toISOString()}}
-async function open(file,p){const s=ub64(file.salt),k=await derive(p,s);const pt=await crypto.subtle.decrypt({name:'AES-GCM',iv:ub64(file.iv)},k,ub64(file.ct));return {data:JSON.parse(dec.decode(pt)),k,s}}
+const kc={};async function open(file,p){const s=ub64(file.salt),ck=file.salt+'|'+p,k=kc[ck]||(kc[ck]=await derive(p,s));const pt=await crypto.subtle.decrypt({name:'AES-GCM',iv:ub64(file.iv)},k,ub64(file.ct));return {data:JSON.parse(dec.decode(pt)),k,s}}
 async function fetchFile(){
   if(token&&C.owner){const r=await gh('GET');if(r.status===404)return null;if(!r.ok)throw new Error('gh '+r.status);const j=await r.json();sha=j.sha;return JSON.parse(dec.decode(ub64(j.content.replace(/\n/g,''))))}
   const r=await fetch(C.file+'?t='+Date.now(),{cache:'no-store'});if(r.status===404)return null;if(!r.ok)throw new Error('http '+r.status);return r.json()}
@@ -943,9 +943,10 @@ setInterval(async()=>{if(!key||document.hidden||document.querySelector('dialog[o
 /* 開啟時 */
 const dk=document.querySelector('.ducks svg');if(dk)login.querySelector('.lgducks').append(dk.cloneNode(true));
 document.body.classList.add('ro');
-(async()=>{token=ls.get(KT);const p=ss.get(KP)||ls.get(KP);$('lgremember').checked=!!ls.get(KP);
-  if(token){try{await checkToken(token)}catch(e){token=null;ls.set(KT,null)}}
-  try{if(p){if(!(await unlock(p,!!ls.get(KP))))return}else{const f=await fetchFile();if(!f)showSetup()}}catch(e){showErr(e.message==='密碼不對'?'':'讀取課表失敗，請檢查網路');ss.set(KP,null)}
+(async()=>{const saved=ls.get(KT);const p=ss.get(KP)||ls.get(KP);$('lgremember').checked=!!ls.get(KP);
+  if(p)$('lgnote').textContent='讀取課表中…';
+  try{if(p){if(!(await unlock(p,!!ls.get(KP))))return}else{const f=await fetchFile();if(!f)showSetup()}}catch(e){showErr(e.message==='密碼不對'?'':'讀取課表失敗，請檢查網路');ss.set(KP,null);$('lgnote').textContent='請輸入檢視密碼。'}
+  if(saved){checkToken(saved).then(()=>{token=saved;setRole()}).catch(()=>ls.set(KT,null))}
 })();
 }
 </script>

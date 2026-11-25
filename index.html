@@ -130,11 +130,14 @@ label select option{background:#15261f}
 .acts{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:8px;justify-content:space-between;margin-top:4px}
 .del{border-color:#ff5c7a;color:#ff8da2}
 .sbox{padding:20px 22px}
-#sdlg{width:min(640px,94vw)}
+#sdlg{width:min(780px,96vw)}
 .tabs{margin:4px 0 12px;flex-wrap:wrap}
 .tab{max-height:56vh;overflow:auto;padding-right:4px}
 .row{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr) 3.6em auto;gap:8px;align-items:center;padding:5px 0;border-bottom:1px solid var(--line)}
 .row.t{grid-template-columns:minmax(0,1fr) 3.6em auto}
+.row.srow{grid-template-columns:minmax(0,1fr) minmax(0,.9fr) 3.2em minmax(0,1.3fr) auto auto auto}
+.row .code{font:13px/1.2 ui-monospace,Menlo,Consolas,monospace;letter-spacing:.04em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+@media(max-width:640px){.row.srow{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.row.srow .code{grid-column:1/-1}}
 .row.tm{grid-template-columns:5em minmax(0,1fr) 1.6em minmax(0,1fr)}
 .row.add{border-bottom:0;padding-top:10px}
 .in{min-height:40px;border:1px solid var(--line);border-radius:9px;padding:0 10px;background:rgba(4,14,10,.5);font-size:16px;width:100%}
@@ -438,6 +441,7 @@ body.ro .add,body.ro #gear{display:none}body.ro .st{cursor:default}body.ro .plb{
 .ticker:hover .tk-track{animation-play-state:paused}
 @keyframes tk{to{transform:translateX(-50%)}}
 @media(prefers-reduced-motion:reduce){.tk-track{animation:none;white-space:normal;display:block}.tk-track span+span{display:none}}
+body.stuview .filters{display:none}
 </style>
 </head>
 <body>
@@ -492,8 +496,8 @@ body.ro .add,body.ro #gear{display:none}body.ro .st{cursor:default}body.ro .plb{
   <div class="lgducks" aria-hidden="true"></div>
   <h2>開瑄成長時刻表</h2>
   <form id="lgf" class="lgform">
-    <p class="note" id="lgnote">請輸入檢視密碼。</p>
-    <label>檢視密碼<input id="lgpw" type="password" autocomplete="current-password" required></label>
+    <p class="note" id="lgnote">老師請輸入檢視密碼；學生或家長請輸入課表代碼。</p>
+    <label>密碼或課表代碼<input id="lgpw" type="password" autocomplete="current-password" required></label>
     <label class="chk"><input type="checkbox" id="lgremember"> 這台裝置記住密碼</label>
     <button class="btn pri" id="lgbtn">進入</button>
   </form>
@@ -678,7 +682,7 @@ function commit(){syncRoster(data);render();if($('sdlg').open)renderSet();
 window.__sched={
   apply(d){if(!d||!Array.isArray(d.entries))return;d.times=fixTimes(d.times);syncRoster(d);if(!['forest','duck'].includes(d.skin))d.skin='duck';data=d;applySkin();render();if($('sdlg').open)renderSet()},
   role(edit){window.CAN_EDIT=edit;document.body.classList.toggle('ro',!edit);render()},
-  status:setStatus,data:()=>data};
+  status:setStatus,data:()=>data,reset(){ui.person='';ui.room='';ui.cat='';render()}};
 
 function parseDates(s){
   return s.split(/[,，、\s]+/).filter(Boolean).map(t=>{
@@ -749,8 +753,8 @@ function renderSet(){
   document.querySelectorAll('#sdlg .tabs button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.tab===setTab));
   ['stu','tea','time','bak','look','pw'].forEach(t=>$('tab-'+t).hidden=t!==setTab);
   document.querySelectorAll('.skin').forEach(b=>b.setAttribute('aria-pressed',b.dataset.skin===data.skin));
-  $('tab-stu').innerHTML=`<p class="note">改名字會同步更新所有相關課程；組別決定學生出現在「資優組」或「支持組」名單。</p>`+
-    data.students.map(s=>`<div class="row"><input class="in" data-ren="stu" data-old="${esc(s.name)}" value="${esc(s.name)}" aria-label="學生名字"><select class="in" data-grp="${esc(s.name)}" aria-label="組別"><option value="gift" ${s.group==='gift'?'selected':''}>資優組</option><option value="res" ${s.group==='res'?'selected':''}>支持組</option></select><span class="cnt">${useCount('stu',s.name)} 堂</span>${delBtn('stu',s.name)}</div>`).join('')+
+  $('tab-stu').innerHTML=`<p class="note">改名字會同步更新所有相關課程；組別決定學生出現在「資優組」或「支持組」名單。<br>「課表代碼」給學生或家長：用代碼登入只看得到這位學生自己的課。重設代碼後舊代碼就失效。</p>`+
+    data.students.map(s=>`<div class="row srow"><input class="in" data-ren="stu" data-old="${esc(s.name)}" value="${esc(s.name)}" aria-label="學生名字"><select class="in" data-grp="${esc(s.name)}" aria-label="組別"><option value="gift" ${s.group==='gift'?'selected':''}>資優組</option><option value="res" ${s.group==='res'?'selected':''}>支持組</option></select><span class="cnt">${useCount('stu',s.name)} 堂</span><span class="code">${esc((data.codes||{})[s.name]||'—')}</span><button type="button" class="btn sm" data-gen="${esc(s.name)}">${(data.codes||{})[s.name]?'重設':'產生'}代碼</button><button type="button" class="btn sm" data-cp="${esc(s.name)}" ${(data.codes||{})[s.name]?'':'disabled'}>複製</button>${delBtn('stu',s.name)}</div>`).join('')+
     `<div class="row add"><input class="in" id="newStu" placeholder="新增學生名字" aria-label="新增學生名字"><select class="in" id="newGrp" aria-label="組別"><option value="gift">資優組</option><option value="res" selected>支持組</option></select><span></span><button type="button" class="btn sm pri" id="addStu">新增</button></div>`;
   $('tab-tea').innerHTML=`<p class="note">改名字會同步更新所有相關課程。</p>`+
     data.teachers.map(t=>`<div class="row t"><input class="in" data-ren="tea" data-old="${esc(t.name)}" value="${esc(t.name)}" aria-label="老師名字"><span class="cnt">${useCount('tea',t.name)} 堂</span>${delBtn('tea',t.name)}</div>`).join('')+
@@ -763,10 +767,13 @@ const sd=$('sdlg');
 sd.addEventListener('click',ev=>{
   const t=ev.target.closest('button');if(!t)return;
   if(t.dataset.tab){setTab=t.dataset.tab;renderSet();return}
+  if(t.dataset.gen){const A='ABCDEFGHJKMNPQRSTUVWXYZ23456789',r=crypto.getRandomValues(new Uint8Array(10));let c='';r.forEach((v,i)=>{c+=A[v%A.length];if(i===3||i===7)c+='-'});data.codes=data.codes||{};data.codes[t.dataset.gen]=c;commit();return}
+  if(t.dataset.cp){const c=(data.codes||{})[t.dataset.cp];if(!c)return;const txt=`開瑄成長時刻表 ${location.origin+location.pathname}\n${t.dataset.cp} 的課表代碼：${c}`;
+    (navigator.clipboard?navigator.clipboard.writeText(txt):Promise.reject()).then(()=>{t.textContent='已複製';setTimeout(()=>t.textContent='複製',1500)}).catch(()=>{$('io').value=txt;setTab='bak';renderSet()});return}
   if(t.dataset.skin){data.skin=t.dataset.skin;applySkin();commit();return}
   if(t.dataset.del){if(!t.dataset.sure){t.dataset.sure='1';t.textContent='確定刪除？';return}
     const n=t.dataset.name;
-    if(t.dataset.del==='stu'){data.students=data.students.filter(s=>s.name!==n);data.entries.forEach(e=>e.stu=e.stu.filter(x=>x!==n))}
+    if(t.dataset.del==='stu'){if(data.codes)delete data.codes[n];data.students=data.students.filter(s=>s.name!==n);data.entries.forEach(e=>e.stu=e.stu.filter(x=>x!==n))}
     else{data.teachers=data.teachers.filter(x=>x.name!==n);data.entries.forEach(e=>{if(e.tea===n)e.tea=''})}
     if(ui.person===n)ui.person='';commit();return}
   if(t.id==='addStu'){const n=$('newStu').value.trim();if(!n||data.students.some(s=>s.name===n)){$('newStu').focus();return}data.students.push({name:n,group:$('newGrp').value});commit();$('newStu')&&$('newStu').focus();return}
@@ -778,7 +785,7 @@ sd.addEventListener('change',ev=>{const t=ev.target;
   if(t.dataset.ren){const old=t.dataset.old,n=t.value.trim(),list=t.dataset.ren==='stu'?data.students:data.teachers;
     if(!n||n===old||list.some(x=>x.name===n)){t.value=old;return}
     list.find(x=>x.name===old).name=n;
-    if(t.dataset.ren==='stu')data.entries.forEach(e=>e.stu=e.stu.map(x=>x===old?n:x));else data.entries.forEach(e=>{if(e.tea===old)e.tea=n});
+    if(t.dataset.ren==='stu'){data.entries.forEach(e=>e.stu=e.stu.map(x=>x===old?n:x));if(data.codes&&data.codes[old]){data.codes[n]=data.codes[old];delete data.codes[old]}}else data.entries.forEach(e=>{if(e.tea===old)e.tea=n});
     if(ui.person===old)ui.person=n;commit();return}
   if(t.dataset.grp){data.students.find(s=>s.name===t.dataset.grp).group=t.value;commit();return}
   if(t.dataset.t){const k=t.dataset.t,i=+t.dataset.i;if(!t.value)return;const v=data.times[k].slice();v[i]=t.value;data.times[k]=v[0]<=v[1]?v:[v[1],v[0]];commit()}
@@ -880,14 +887,28 @@ document.body.classList.add('ro');
 const S=window.__sched,$=id=>document.getElementById(id),login=$('login');
 const C=Object.assign({owner:'',repo:'',branch:'main',file:'data.enc.json'},window.SCHEDULE_CONFIG||{});
 if(!C.owner&&/\.github\.io$/.test(location.hostname)){C.owner=location.hostname.split('.')[0];C.repo=C.repo||location.pathname.split('/').filter(Boolean)[0]||(C.owner+'.github.io')}
-const ITER=310000,enc=new TextEncoder(),dec=new TextDecoder();
+const ITER=310000,SITER=100000,enc=new TextEncoder(),dec=new TextDecoder();
 const b64=u=>{let s='';const a=new Uint8Array(u);for(let i=0;i<a.length;i+=0x8000)s+=String.fromCharCode(...a.subarray(i,i+0x8000));return btoa(s)};
 const ub64=s=>Uint8Array.from(atob(s),c=>c.charCodeAt(0));
 const ls={get(k){try{return localStorage.getItem(k)}catch(e){return null}},set(k,v){try{v==null?localStorage.removeItem(k):localStorage.setItem(k,v)}catch(e){}}};
 const ss={get(k){try{return sessionStorage.getItem(k)}catch(e){return null}},set(k,v){try{v==null?sessionStorage.removeItem(k):sessionStorage.setItem(k,v)}catch(e){}}};
 const KP='kx-sched-pw',KT='kx-sched-token';
-let pw=null,salt=null,key=null,token=null,lastCt='',sha=null;
-async function derive(p,s){const base=await crypto.subtle.importKey('raw',enc.encode(p),'PBKDF2',false,['deriveKey']);return crypto.subtle.deriveKey({name:'PBKDF2',salt:s,iterations:ITER,hash:'SHA-256'},base,{name:'AES-GCM',length:256},false,['encrypt','decrypt'])}
+let pw=null,salt=null,key=null,token=null,lastCt='',sha=null,mode='main',scode=null,idSalt=null;const stuKeys={};
+async function deriveIt(p,s,it){const base=await crypto.subtle.importKey('raw',enc.encode(p),'PBKDF2',false,['deriveKey']);return crypto.subtle.deriveKey({name:'PBKDF2',salt:s,iterations:it,hash:'SHA-256'},base,{name:'AES-GCM',length:256},false,['encrypt','decrypt'])}
+const derive=(p,s)=>deriveIt(p,s,ITER);
+const norm=c=>String(c).toUpperCase().replace(/[^A-Z0-9]/g,'');
+async function sidOf(is,code){return b64(await crypto.subtle.digest('SHA-256',enc.encode(is+'|'+norm(code)))).slice(0,24)}
+function subsetFor(d,name){const es=d.entries.filter(e=>e.stu.includes(name)).map(e=>({...e,stu:[name],note:''}));
+  return {entries:es,times:d.times,skin:d.skin,students:[{name,group:((d.students||[]).find(s=>s.name===name)||{}).group||'res'}],teachers:[...new Set(es.map(e=>e.tea).filter(Boolean))].map(n=>({name:n})),viewer:name}}
+async function buildStudents(d){const out={},codes=d.codes||{};
+  await Promise.all(Object.entries(codes).map(async([name,code])=>{if(!code||!(d.students||[]).some(s=>s.name===name))return;const c=norm(code);
+    let k=stuKeys[c];if(!k){const s=crypto.getRandomValues(new Uint8Array(16));k=stuKeys[c]={s,k:await deriveIt(c,s,SITER)}}
+    const iv=crypto.getRandomValues(new Uint8Array(12)),ct=await crypto.subtle.encrypt({name:'AES-GCM',iv},k.k,enc.encode(JSON.stringify(subsetFor(d,name))));
+    out[await sidOf(idSalt,c)]={salt:b64(k.s),iv:b64(iv),ct:b64(ct),iter:SITER}}));
+  return out}
+async function sealAll(d){if(!idSalt)idSalt=b64(crypto.getRandomValues(new Uint8Array(16)));const f=await seal(d);f.v=2;f.idSalt=idSalt;f.students=await buildStudents(d);return f}
+async function openStudent(f,code){if(!f.idSalt||!f.students)return null;const b=f.students[await sidOf(f.idSalt,code)];if(!b)return null;
+  const k=await deriveIt(norm(code),ub64(b.salt),b.iter||SITER);const pt=await crypto.subtle.decrypt({name:'AES-GCM',iv:ub64(b.iv)},k,ub64(b.ct));return {data:JSON.parse(dec.decode(pt)),ct:b.ct}}
 async function seal(obj){const iv=crypto.getRandomValues(new Uint8Array(12));const ct=await crypto.subtle.encrypt({name:'AES-GCM',iv},key,enc.encode(JSON.stringify(obj)));return {v:1,kdf:'PBKDF2-SHA256',iter:ITER,salt:b64(salt),iv:b64(iv),ct:b64(ct),updated:new Date().toISOString()}}
 const kc={};async function open(file,p){const s=ub64(file.salt),ck=file.salt+'|'+p,k=kc[ck]||(kc[ck]=await derive(p,s));const pt=await crypto.subtle.decrypt({name:'AES-GCM',iv:ub64(file.iv)},k,ub64(file.ct));return {data:JSON.parse(dec.decode(pt)),k,s}}
 async function fetchFile(){
@@ -907,12 +928,16 @@ async function push(file,msg){
 async function checkToken(t){if(!C.owner)throw new Error('找不到 repository，請在 index.html 的 SCHEDULE_CONFIG 填 owner 和 repo');
   const r=await fetch(`https://api.github.com/repos/${C.owner}/${C.repo}`,{headers:{Authorization:'Bearer '+t,Accept:'application/vnd.github+json'}});
   if(!r.ok)throw new Error('金鑰無效，或沒有這個 repository 的權限');const j=await r.json();if(!(j.permissions&&j.permissions.push))throw new Error('這把金鑰沒有寫入權限（Contents 要選 Read and write）')}
-function setRole(){const edit=!!token&&!!key;S.role(edit);$('adminBtn').hidden=edit||!key;$('logout').hidden=!key;S.status(edit?'管理模式：修改會存回 GitHub':key?'檢視模式':'')}
-window.__save=async data=>{if(!token||!key)throw new Error('no token');const f=await seal(data);await push(f,'更新課表 '+new Date().toLocaleString('zh-TW'));S.status('已存到 GitHub，約 1 分鐘後其他人重新整理會看到')};
+function setRole(){if(mode==='stu'){S.role(false);$('adminBtn').hidden=true;$('logout').hidden=false;$('logout').textContent='登出';document.body.classList.add('stuview');S.reset();S.status(((S.data().viewer)||'')+' 的課表');return}
+  document.body.classList.remove('stuview');$('logout').textContent='鎖定';const edit=!!token&&!!key;S.role(edit);$('adminBtn').hidden=edit||!key;$('logout').hidden=!key;S.status(edit?'管理模式：修改會存回 GitHub':key?'檢視模式':'')}
+window.__save=async data=>{if(!token||!key||mode!=='main')throw new Error('沒有管理權限');S.status('加密中…');const f=await sealAll(data);await push(f,'更新課表 '+new Date().toLocaleString('zh-TW'));S.status('已存到 GitHub，約 1 分鐘後其他人重新整理會看到')};
 function showErr(m){$('lgerr').textContent=m||''}
 async function unlock(p,remember){
   const f=await fetchFile();if(!f){showSetup();return false}
-  let o;try{o=await open(f,p)}catch(e){throw new Error('密碼不對')}key=o.k;salt=o.s;pw=p;lastCt=f.ct;
+  idSalt=f.idSalt||null;
+  const st=await openStudent(f,p).catch(()=>null);
+  if(st){mode='stu';scode=p;lastCt=st.ct;ss.set(KP,p);ls.set(KP,remember?p:null);login.hidden=true;S.apply(st.data);setRole();return true}
+  let o;try{o=await open(f,p)}catch(e){throw new Error('密碼或代碼不對')}mode='main';key=o.k;salt=o.s;pw=p;lastCt=f.ct;
   ss.set(KP,p);ls.set(KP,remember?p:null);
   login.hidden=true;S.apply(o.data);setRole();return true}
 function showSetup(){$('lgf').hidden=true;$('setupf').hidden=false;login.hidden=false}
@@ -923,29 +948,31 @@ $('setupf').addEventListener('submit',async ev=>{ev.preventDefault();showErr('')
   const t=$('suToken').value.trim(),p=$('suPw').value;if(p!==$('suPw2').value){showErr('兩次密碼不一樣');return}
   $('suBtn').disabled=true;
   try{await checkToken(t);token=t;salt=crypto.getRandomValues(new Uint8Array(16));key=await derive(p,salt);pw=p;
-    const empty={entries:[],skin:'duck'};const f=await seal(empty);await push(f,'建立課表');ss.set(KP,p);
+    const empty={entries:[],skin:'duck'};idSalt=null;const f=await sealAll(empty);await push(f,'建立課表');ss.set(KP,p);
     login.hidden=true;S.apply(empty);setRole();S.status('建立完成：請到設定 > 資料備份 匯入課表資料')}
   catch(e){showErr(e.message)}$('suBtn').disabled=false});
 $('adminBtn').onclick=()=>{$('aderr').textContent='';$('adlg').showModal()};
 $('adCancel').onclick=()=>$('adlg').close();
 $('adf').addEventListener('submit',async ev=>{ev.preventDefault();const t=$('adToken').value.trim();$('adBtn').disabled=true;
   try{await checkToken(t);token=t;sha=null;if($('adRemember').checked)ls.set(KT,t);$('adlg').close();$('adToken').value='';
-    const f=await fetchFile();if(f&&f.ct!==lastCt){const o=await open(f,pw);S.apply(o.data);lastCt=f.ct}setRole()}
+    const f=await fetchFile();if(f&&f.ct!==lastCt){const o=await open(f,pw);S.apply(o.data);lastCt=f.ct;idSalt=f.idSalt||idSalt}setRole()}
   catch(e){$('aderr').textContent=e.message}$('adBtn').disabled=false});
-$('logout').onclick=()=>{ss.set(KP,null);ls.set(KP,null);token=null;key=null;pw=null;S.role(false);S.apply({entries:[],skin:'duck'});login.hidden=false;$('lgf').hidden=false;$('setupf').hidden=true;$('adminBtn').hidden=true;$('logout').hidden=true;S.status('')};
+$('logout').onclick=()=>{ss.set(KP,null);ls.set(KP,null);token=null;key=null;pw=null;mode='main';scode=null;document.body.classList.remove('stuview');S.role(false);S.apply({entries:[],skin:'duck'});login.hidden=false;$('lgf').hidden=false;$('setupf').hidden=true;$('adminBtn').hidden=true;$('logout').hidden=true;S.status('')};
 $('chpw').onclick=async()=>{const p=$('npw').value;if(p.length<8||p!==$('npw2').value){$('pwMsg').textContent='兩次要一樣，至少 8 碼';return}
   if(!token){$('pwMsg').textContent='要先管理登入';return}
-  try{salt=crypto.getRandomValues(new Uint8Array(16));key=await derive(p,salt);pw=p;await push(await seal(S.data()),'更換檢視密碼');ss.set(KP,p);if(ls.get(KP))ls.set(KP,p);$('pwMsg').textContent='已更換';$('npw').value=$('npw2').value=''}
+  try{salt=crypto.getRandomValues(new Uint8Array(16));key=await derive(p,salt);pw=p;await push(await sealAll(S.data()),'更換檢視密碼');ss.set(KP,p);if(ls.get(KP))ls.set(KP,p);$('pwMsg').textContent='已更換';$('npw').value=$('npw2').value=''}
   catch(e){$('pwMsg').textContent=e.message}};
 $('forgetTok').onclick=()=>{ls.set(KT,null);$('pwMsg').textContent='這台裝置已忘記金鑰（重新整理後要重新登入管理）'};
 /* 每 2 分鐘看一次有沒有新版本（沒在編輯時） */
-setInterval(async()=>{if(!key||document.hidden||document.querySelector('dialog[open]'))return;try{const f=await fetchFile();if(f&&f.ct!==lastCt&&f.salt===b64(salt)){const o=await open(f,pw);S.apply(o.data);lastCt=f.ct}}catch(e){}},120000);
+setInterval(async()=>{if((!key&&mode!=='stu')||document.hidden||document.querySelector('dialog[open]'))return;try{const f=await fetchFile();if(!f)return;
+  if(mode==='stu'){const st=await openStudent(f,scode);if(st&&st.ct!==lastCt){S.apply(st.data);lastCt=st.ct;setRole()}return}
+  if(f.ct!==lastCt&&f.salt===b64(salt)){const o=await open(f,pw);S.apply(o.data);lastCt=f.ct;idSalt=f.idSalt||idSalt}}catch(e){}},120000);
 /* 開啟時 */
 const dk=document.querySelector('.ducks svg');if(dk)login.querySelector('.lgducks').append(dk.cloneNode(true));
 document.body.classList.add('ro');
 (async()=>{const saved=ls.get(KT);const p=ss.get(KP)||ls.get(KP);$('lgremember').checked=!!ls.get(KP);
   if(p)$('lgnote').textContent='讀取課表中…';
-  try{if(p){if(!(await unlock(p,!!ls.get(KP))))return}else{const f=await fetchFile();if(!f)showSetup()}}catch(e){showErr(e.message==='密碼不對'?'':'讀取課表失敗，請檢查網路');ss.set(KP,null);$('lgnote').textContent='請輸入檢視密碼。'}
+  try{if(p){if(!(await unlock(p,!!ls.get(KP))))return}else{const f=await fetchFile();if(!f)showSetup()}}catch(e){showErr(e.message==='密碼或代碼不對'?'':'讀取課表失敗，請檢查網路');ss.set(KP,null);$('lgnote').textContent='老師請輸入檢視密碼；學生或家長請輸入課表代碼。'}
   if(saved){checkToken(saved).then(()=>{token=saved;setRole()}).catch(()=>ls.set(KT,null))}
 })();
 }
